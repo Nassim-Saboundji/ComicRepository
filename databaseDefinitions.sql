@@ -8,6 +8,7 @@ CREATE TABLE Authors (
 CREATE TABLE Comic (
     ComicId INT NOT NULL AUTO_INCREMENT,
     ComicTitle VARCHAR(255) NOT NULL,
+    ComicPosterPath VARCHAR(255) NOT NULL,
     Synopsis TEXT NOT NULL,
     ComicViews INT NOT NULL, 
     PRIMARY KEY (ComicId),
