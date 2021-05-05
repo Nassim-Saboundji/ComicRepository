@@ -1,0 +1,28 @@
+{
+  "name": "comicrepo",
+  "version": "1.0.0",
+  "description": "A web app for hosting an online comic repository",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nassim-Saboundji/comicRepo.git"
+  },
+  "keywords": [
+    "comics",
+    "repository"
+  ],
+  "author": "Nassim Saboundji",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Nassim-Saboundji/comicRepo/issues"
+  },
+  "homepage": "https://github.com/Nassim-Saboundji/comicRepo#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "pg": "^8.6.0",
+    "validator": "^13.6.0"
+  }
+}

@@ -1,23 +1,23 @@
-CREATE TABLE Author (
-    AuthorId INT NOT NULL AUTO_INCREMENT,
-    FirstName VARCHAR(255),
-    LastName VARCHAR(255) NOT NULL,
-    PRIMARY KEY (AuthorId)
-);
-
 CREATE TABLE Comic (
-    ComicId INT NOT NULL AUTO_INCREMENT,
+    ComicId SERIAL,
     ComicTitle VARCHAR(255) NOT NULL,
     ComicPosterPath VARCHAR(255) NOT NULL,
     Synopsis TEXT NOT NULL,
     ComicViews INT NOT NULL, 
+    PRIMARY KEY (ComicId)
+);
+
+CREATE TABLE Author (
     AuthorId INT,
-    PRIMARY KEY (ComicId),
-    FOREIGN KEY (AuthorId) REFERENCES Author(AuthorId)
+    FirstName VARCHAR(255),
+    LastName VARCHAR(255) NOT NULL,
+    ComicId INT,
+    PRIMARY KEY (AuthorId),
+    FOREIGN KEY (ComicId) REFERENCES Comic(ComicId)
 );
 
 CREATE TABLE Chapter (
-    ChapterId INT NOT NULL AUTO_INCREMENT,
+    ChapterId SERIAL,
     ChapterTitle VARCHAR(255) NOT NULL,
     ChapterViews INT NOT NULL,
     ComicId INT,
