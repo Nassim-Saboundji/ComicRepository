@@ -22,40 +22,43 @@ if the operation was successful or not.
 
 
 
-
-var message = "";
+//updating this variable is not a problem because NodeJS is sequential
+//and we check it's value almost immediately after the value is changed.
+var addComicStatus = "";
+var fileNameOnDisk = "";
 function addComicFilter(req, file, cb) {
     let title = req.body.title;
     let synopsis = req.body.synopsis;
 
     if (!validator.isAlphanumeric(title)) {
         cb(null, false);
-        message = "Title is invalid";
+        addComicStatus = "Title is invalid.";
         return;
     }
 
     if (!validator.isAlphanumeric(synopsis)) {
         cb(null, false);
-        message = "Synopsis is invalid";
+        addComicStatus = "Synopsis is invalid.";
         return;
     }
 
     if (file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg") {
-        message = "Upload was successful";
+        addComicStatus = "Upload was successful.";
         cb(null, true);
     } else {
         cb(null, false);
-        message = "Only png, jpg, jpeg are accepted";
+        addComicStatus = "Only png, jpg, jpeg are accepted.";
         return;
     }
 }
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'uploads/')
+        cb(null, 'uploads/');
     },
     filename: function (req, file, cb) {
-        cb(null, file.fieldname + '-' + Date.now())
+        let fileType = file.mimetype.split('/');
+        cb(null, file.fieldname + '-' + Date.now() + '.' + fileType[1]);
     }
 });
 
@@ -68,7 +71,26 @@ var addComicUpload = multer({
 
 
 app.post('/profile', addComicUpload.single('poster'), function (req, res, next) {
-    res.json({message: message});
+    if(addComicStatus == "Upload was successful.") {
+        db.client.connect();
+        const query = {
+            text: "INSERT INTO comic(comictitle, comicposterpath, synopsis, comicviews) VALUES ($1::text,$2::text,$3::text,0)",
+            values: ['Titre', 'nom.jpg', 'Synopsis'],
+            rowMode: 'array'
+        }
+
+        db.client.query(query, (err, res) => {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            console.log('Data insert successful');
+            db.client.end();
+
+        });
+    }
+    
+    res.json({message: addComicStatus});
 });
 
 app.listen(port, () => {
