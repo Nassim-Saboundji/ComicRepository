@@ -22,32 +22,36 @@ if the operation was successful or not.
 
 
 
-//updating this variable is not a problem because NodeJS is sequential
-//and we check it's value almost immediately after the value is changed.
-var addComicStatus = "";
-var fileNameOnDisk = "";
+//this variable contains all the data require to handle the
+//addComic POST route.
+var addComicData = {
+    message: "",
+    path: "",
+    title: "",
+    synopsis: ""
+}
 function addComicFilter(req, file, cb) {
-    let title = req.body.title;
-    let synopsis = req.body.synopsis;
+    addComicData.title = req.body.title;
+    addComicData.synopsis = req.body.synopsis;
 
-    if (!validator.isAlphanumeric(title)) {
+    if (validator.isEmpty(addComicData.title)) {
         cb(null, false);
-        addComicStatus = "Title is invalid.";
+        addComicData.message = "Title is invalid.";
         return;
     }
 
-    if (!validator.isAlphanumeric(synopsis)) {
+    if (validator.isEmpty(addComicData.synopsis)) {
         cb(null, false);
-        addComicStatus = "Synopsis is invalid.";
+        addComicData.message = "Synopsis is invalid.";
         return;
     }
 
     if (file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg") {
-        addComicStatus = "Upload was successful.";
+        addComicData.message = "Upload was successful.";
         cb(null, true);
     } else {
         cb(null, false);
-        addComicStatus = "Only png, jpg, jpeg are accepted.";
+        addComicData.message = "Only png, jpg, jpeg are accepted.";
         return;
     }
 }
@@ -58,7 +62,8 @@ var storage = multer.diskStorage({
     },
     filename: function (req, file, cb) {
         let fileType = file.mimetype.split('/');
-        cb(null, file.fieldname + '-' + Date.now() + '.' + fileType[1]);
+        addComicData.path = file.fieldname + '-' + Date.now() + '.' + fileType[1];
+        cb(null, addComicData.path);
     }
 });
 
@@ -71,11 +76,11 @@ var addComicUpload = multer({
 
 
 app.post('/profile', addComicUpload.single('poster'), function (req, res, next) {
-    if(addComicStatus == "Upload was successful.") {
+    if(addComicData.message == "Upload was successful.") {
         db.client.connect();
         const query = {
             text: "INSERT INTO comic(comictitle, comicposterpath, synopsis, comicviews) VALUES ($1::text,$2::text,$3::text,0)",
-            values: ['Titre', 'nom.jpg', 'Synopsis'],
+            values: [addComicData.title, addComicData.path, addComicData.synopsis],
             rowMode: 'array'
         }
 
@@ -90,7 +95,7 @@ app.post('/profile', addComicUpload.single('poster'), function (req, res, next) 
         });
     }
     
-    res.json({message: addComicStatus});
+    res.json({message: addComicData.message});
 });
 
 app.listen(port, () => {
