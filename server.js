@@ -1,7 +1,7 @@
 const db = require('./dummyDBCredentials');
 const express = require('express');
 const acm = require('./addComicManager')
-
+const achm = require('./addChapterManager');
 const app = express();
 const port = 3000;
 
@@ -41,9 +41,8 @@ app.post('/addComic', acm.addComicUpload.single('poster'), function (req, res, n
     res.json({message: acm.addComicData.message});
 });
 
-app.post('/addChapter', function (req, res, next) {
-    console.log(req.body.comicId);
-    res.json({test: "test"});
+app.post('/addChapter', achm.addChapterUpload.array('pages', 5), function (req, res, next) {
+    res.json({message: achm.addChapterData.message});
 });
 
 
