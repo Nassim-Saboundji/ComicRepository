@@ -1,6 +1,9 @@
 const validator = require('validator');
-const multer = require('multer');
+const multer = require('multer'); //this is what is responsible for file uploads.
 
+
+// Contains all the data needed for adding a comic to table
+// comic in the database.
 var addComicData = {
     message: "",
     poster: "",
@@ -8,6 +11,20 @@ var addComicData = {
     info: ""
 }
 
+/*
+This function will validate all the data posted by the user including the image
+file before proceeding with the image upload. 
+The reason that we validated the other post data here instead of just the file being uploaded is because its the only place where 
+we can access the content req.body.title and req.body.info and not receive undefined for both.
+This function is passed to the addComicUpload multer object through the fileFilter record.
+
+Express can't access req.body when the form has an enctype="multipart/form-data".
+However Multer requires this enctype to make file uploads. This means that
+The route addComic won't be able to access req.body and it will be undefined.
+This is the rational behind accessing them through addComicFilter and doing the
+validation here. This is also why we send the data to addComicData because we can't get it
+elsewhere.
+*/
 function addComicFilter(req, file, cb) {
     addComicData.title = req.body.title;
     addComicData.info = req.body.info;

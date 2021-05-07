@@ -5,17 +5,18 @@ const acm = require('./addComicManager')
 const app = express();
 const port = 3000;
 
+//This required to access the body of post requests
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 /*
 This routes allows the user to add a comic to the comicRepo
-The user must have submitted a title, synopsis, author(s) name(s)
+The user must have submitted a title, information about the comic (synopsis, authors, etc...)
 and an image file for the comic poster (which is a cover image 
 that represents the comic as a whole).
 
 This route will return a json object which will tell the client
-if the operation was successful or not.
+if the operation was successful or not and why if he latter.
 */
 app.post('/addComic', acm.addComicUpload.single('poster'), function (req, res, next) {
     if(acm.addComicData.message == "Upload was successful.") {
@@ -39,6 +40,12 @@ app.post('/addComic', acm.addComicUpload.single('poster'), function (req, res, n
     
     res.json({message: acm.addComicData.message});
 });
+
+app.post('/addChapter', function (req, res, next) {
+    console.log(req.body.comicId);
+    res.json({test: "test"});
+});
+
 
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)
