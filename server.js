@@ -77,12 +77,28 @@ app.post('/addChapter', achm.addChapterUpload.array('pages', 100), function (req
     res.json({message: achm.addChapterData.message});
 });
 
-
+//get general information about a comic
 app.get('/comic/:comicId', function (req, res, next) {
     let comicId = req.params.comicId;
     db.pool.query(
         "SELECT comic_title, comic_poster, comic_info, comic_views FROM comic WHERE comic_id=$1",
         [comicId],
+        (error, results) => {
+            if (error) {
+                throw error;
+            }
+            res.json(results.rows);
+        }
+    );
+});
+
+//get all the pages of a given chapter of a given comic
+app.get('/comic/:comicId/:chapterNumber', function (req, res, next) {
+    let comicId = req.params.comicId;
+    let chapterNumber = req.params.chapterNumber;
+    db.pool.query(
+        "SELECT page_image FROM comic_page WHERE comic_id=$1 AND chapter_number=$2",
+        [comicId, chapterNumber],
         (error, results) => {
             if (error) {
                 throw error;
