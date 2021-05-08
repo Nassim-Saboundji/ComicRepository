@@ -1,3 +1,4 @@
+const db = require('./dummyDBCredentials');
 const validator = require('validator');
 const multer = require('multer'); //this is what is responsible for file uploads.
 
@@ -9,7 +10,22 @@ var addChapterData = {
     chapterPages: []
 }
 
-function addChapterFilter(req, file, cb) {
+/*
+Makes sure that the comicId refer to an id that is in the database.
+It returns a boolean.
+We want to do this here because we don't want to upload a chapter to
+a non existent comic.
+*/
+async function checkComicId(id) {
+    let results =  await db.pool.query(
+        "SELECT EXISTS(SELECT 1 FROM comic WHERE comicid=$1)",
+        [parseInt(addChapterData.comicId)]
+    );
+    return results.rows[0].exists;
+}
+
+
+async function addChapterFilter(req, file, cb) {
     addChapterData.comicId = req.body.comicId;
     addChapterData.chapterTitle = req.body.chapterTitle;
 
@@ -22,7 +38,16 @@ function addChapterFilter(req, file, cb) {
 
     if (!validator.isInt(addChapterData.comicId)) {
         cb(null, false);
-        addChapterData.message = "Comic Id is invalid.";
+        addChapterData.message = "Comic Id you provided is invalid.";
+        return;
+    }
+    
+    //Here we check if the comicId exists in our database
+    let result = await checkComicId(addChapterData.comicId);
+    if (result != true) {
+        cb(null, false)
+        addChapterData.message = "The comic you want to add a chapter to does not exist.";
+        return;
     }
 
     if (file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg") {

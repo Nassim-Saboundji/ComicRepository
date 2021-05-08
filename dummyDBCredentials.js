@@ -1,4 +1,4 @@
-const { Client } = require('pg');
+const Pool = require('pg').Pool
 
 /*
 It's not best practice to commit your db credentials to your git repo.
@@ -9,15 +9,16 @@ simplicity's sake I've decided to put the credentials in code.
 Note that the credentials below uses the default postgres user
 which is not recommended in production.
 */
-const client = new Client({
-    user: 'postgres',
-    host: 'localhost',
-    database: 'comicrepo',
-    password: 'postgres',
-    port: 5432,
-});
+const pool = new Pool({
+  user: 'postgres',
+  host: 'localhost',
+  database: 'comicrepo',
+  password: 'postgres',
+  port: 5432,
+})
+
 
 
 module.exports = {
-    client
+    pool
 }

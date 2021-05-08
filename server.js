@@ -20,28 +20,22 @@ if the operation was successful or not and why if he latter.
 */
 app.post('/addComic', acm.addComicUpload.single('poster'), function (req, res, next) {
     if(acm.addComicData.message == "Upload was successful.") {
-        db.client.connect();
-        const query = {
-            text: "INSERT INTO comic(comictitle, comicposter, comicinfo, comicviews) VALUES ($1::text,$2::text,$3::text,0)",
-            values: [acm.addComicData.title, acm.addComicData.poster, acm.addComicData.info],
-            rowMode: 'array'
-        }
-
-        db.client.query(query, (err, res) => {
-            if (err) {
-                console.error(err);
-                return;
+        db.pool.query(
+            "INSERT INTO comic(comictitle, comicposter, comicinfo, comicviews) VALUES ($1::text,$2::text,$3::text,0)",
+            [acm.addComicData.title, acm.addComicData.poster, acm.addComicData.info],
+            (error, results) => {
+                if (error) {
+                  throw error
+                }
             }
-            console.log('Data insert successful');
-            db.client.end();
 
-        });
+        );
     }
     
     res.json({message: acm.addComicData.message});
 });
 
-app.post('/addChapter', achm.addChapterUpload.array('pages', 5), function (req, res, next) {
+app.post('/addChapter', achm.addChapterUpload.array('pages', 100), function (req, res, next) {
     res.json({message: achm.addChapterData.message});
 });
 

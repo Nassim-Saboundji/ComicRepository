@@ -8,7 +8,7 @@ CREATE TABLE Comic (
 );
 
 CREATE TABLE Chapter (
-    ChapterId SERIAL,
+    ChapterId INT NOT NULL,
     ChapterTitle VARCHAR(255) NOT NULL,
     ChapterViews INT NOT NULL,
     ComicId INT,
