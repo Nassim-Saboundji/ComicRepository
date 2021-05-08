@@ -9,6 +9,10 @@ const port = 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+//For loading uploaded images we make the uploads folder accessible
+app.use('/static',express.static('uploads'));
+
+
 /*
 This routes allows the user to add a comic to the comicRepo
 The user must have submitted a title, information about the comic (synopsis, authors, etc...)
@@ -71,6 +75,21 @@ app.post('/addChapter', achm.addChapterUpload.array('pages', 100), function (req
     }
     
     res.json({message: achm.addChapterData.message});
+});
+
+
+app.get('/comic/:comicId', function (req, res, next) {
+    let comicId = req.params.comicId;
+    db.pool.query(
+        "SELECT comic_title, comic_poster, comic_info, comic_views FROM comic WHERE comic_id=$1",
+        [comicId],
+        (error, results) => {
+            if (error) {
+                throw error;
+            }
+            res.json(results.rows);
+        }
+    );
 });
 
 
