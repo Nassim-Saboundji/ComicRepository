@@ -6,6 +6,7 @@ const multer = require('multer'); //this is what is responsible for file uploads
 var addChapterData = {
     message: "",
     comicId: null,
+    chapterNumber: null,
     chapterTitle: "",
     chapterPages: []
 }
@@ -18,7 +19,7 @@ a non existent comic.
 */
 async function checkComicId(id) {
     let results =  await db.pool.query(
-        "SELECT EXISTS(SELECT 1 FROM comic WHERE comicid=$1)",
+        "SELECT EXISTS(SELECT 1 FROM comic WHERE comic_id=$1)",
         [parseInt(addChapterData.comicId)]
     );
     return results.rows[0].exists;
@@ -27,6 +28,7 @@ async function checkComicId(id) {
 
 async function addChapterFilter(req, file, cb) {
     addChapterData.comicId = req.body.comicId;
+    addChapterData.chapterNumber = req.body.chapterNumber;
     addChapterData.chapterTitle = req.body.chapterTitle;
 
     if (validator.isEmpty(addChapterData.chapterTitle)) {
@@ -35,6 +37,11 @@ async function addChapterFilter(req, file, cb) {
         return;
     }
 
+    if (!validator.isInt(addChapterData.chapterNumber)) {
+        cb(null, false);
+        addChapterData.message = "Chapter Number is invalid.";
+        return;
+    }
 
     if (!validator.isInt(addChapterData.comicId)) {
         cb(null, false);

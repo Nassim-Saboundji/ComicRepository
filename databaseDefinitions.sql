@@ -1,26 +1,26 @@
-CREATE TABLE Comic (
-    ComicId SERIAL,
-    ComicTitle VARCHAR(255) NOT NULL,
-    ComicPoster VARCHAR(255) NOT NULL,
-    ComicInfo TEXT NOT NULL,
-    ComicViews INT NOT NULL, 
-    PRIMARY KEY (ComicId)
+CREATE TABLE comic (
+    comic_id SERIAL,
+    comic_title VARCHAR(255) NOT NULL,
+    comic_poster VARCHAR(255) NOT NULL,
+    comic_info TEXT NOT NULL,
+    comic_views INT NOT NULL, 
+    PRIMARY KEY (comic_id)
 );
 
-CREATE TABLE Chapter (
-    ChapterId INT NOT NULL,
-    ChapterTitle VARCHAR(255) NOT NULL,
-    ChapterViews INT NOT NULL,
-    ComicId INT,
-    PRIMARY KEY (ChapterId),
-    FOREIGN KEY (ComicId) REFERENCES Comic(ComicId)
+CREATE TABLE chapter (
+    chapter_number INT,
+    chapter_title VARCHAR(255),
+    chapter_views INT NOT NULL,
+    comic_id INT,
+    FOREIGN KEY (comic_id) REFERENCES comic(comic_id),
+    PRIMARY KEY (comic_id, chapter_number)
 );
 
-CREATE TABLE ComicPage (
-    pageNumber INT NOT NULL,
-    pagePath VARCHAR(255) NOT NULL,
-    pageViews INT NOT NULL,
-    ChapterId INT,
-    FOREIGN KEY (ChapterId) REFERENCES Chapter(ChapterId),
-    PRIMARY KEY (ChapterId, pageNumber)
+CREATE TABLE comic_page (
+    page_number INT NOT NULL,
+    page_image VARCHAR(255) NOT NULL,
+    chapter_number INT,
+    comic_id INT,
+    FOREIGN KEY (comic_id, chapter_number) REFERENCES chapter(comic_id, chapter_number),
+    PRIMARY KEY (comic_id, chapter_number, page_number)
 );

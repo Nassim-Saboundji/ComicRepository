@@ -21,11 +21,11 @@ if the operation was successful or not and why if he latter.
 app.post('/addComic', acm.addComicUpload.single('poster'), function (req, res, next) {
     if(acm.addComicData.message == "Upload was successful.") {
         db.pool.query(
-            "INSERT INTO comic(comictitle, comicposter, comicinfo, comicviews) VALUES ($1::text,$2::text,$3::text,0)",
+            "INSERT INTO comic(comic_title, comic_poster, comic_info, comic_views) VALUES ($1::text,$2::text,$3::text,0)",
             [acm.addComicData.title, acm.addComicData.poster, acm.addComicData.info],
             (error, results) => {
                 if (error) {
-                  throw error
+                  throw error;
                 }
             }
 
@@ -36,8 +36,43 @@ app.post('/addComic', acm.addComicUpload.single('poster'), function (req, res, n
 });
 
 app.post('/addChapter', achm.addChapterUpload.array('pages', 100), function (req, res, next) {
+    if (achm.addChapterData.message == "Upload was successful.") {
+        db.pool.query(
+            "INSERT INTO chapter(chapter_number, chapter_title, chapter_views, comic_id) VALUES ($1,$2::text,0,$3)",
+            [
+             achm.addChapterData.chapterNumber,
+             achm.addChapterData.chapterTitle,
+             achm.addChapterData.comicId
+            ],
+            (error, results) => {
+                if (error) {
+                    throw error;
+                }
+            }
+        );
+
+        for (let i = 0; i < achm.addChapterData.chapterPages.length; i++) {
+            db.pool.query(
+                "INSERT INTO comic_page(page_number, page_image, chapter_number, comic_id)" +
+                " VALUES ($1,$2::text,$3,$4)",
+                [
+                 (i+1),
+                 achm.addChapterData.chapterPages[i],
+                 achm.addChapterData.chapterNumber,
+                 achm.addChapterData.comicId
+                ],
+                (error, results) => {
+                    if (error) {
+                        throw error;
+                    }
+                }
+            );
+        }
+    }
+    
     res.json({message: achm.addChapterData.message});
 });
+
 
 
 app.listen(port, () => {
