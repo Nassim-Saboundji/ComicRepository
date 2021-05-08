@@ -81,7 +81,7 @@ app.post('/addChapter', achm.addChapterUpload.array('pages', 100), function (req
 app.get('/comic/:comicId', function (req, res, next) {
     let comicId = req.params.comicId;
     db.pool.query(
-        "SELECT comic_title, comic_poster, comic_info, comic_views FROM comic WHERE comic_id=$1",
+        "SELECT * FROM comic NATURAL JOIN chapter WHERE comic_id=$1",
         [comicId],
         (error, results) => {
             if (error) {
@@ -91,6 +91,7 @@ app.get('/comic/:comicId', function (req, res, next) {
         }
     );
 });
+
 
 //get all the pages of a given chapter of a given comic
 app.get('/comic/:comicId/:chapterNumber', function (req, res, next) {
@@ -107,6 +108,7 @@ app.get('/comic/:comicId/:chapterNumber', function (req, res, next) {
         }
     );
 });
+
 
 
 
