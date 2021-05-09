@@ -39,6 +39,8 @@ app.post('/addComic', acm.addComicUpload.single('poster'), function (req, res, n
     res.json({message: acm.addComicData.message});
 });
 
+
+
 app.post('/addChapter', achm.addChapterUpload.array('pages', 100), function (req, res, next) {
     if (achm.addChapterData.message == "Upload was successful.") {
         db.pool.query(
@@ -73,7 +75,10 @@ app.post('/addChapter', achm.addChapterUpload.array('pages', 100), function (req
             );
         }
     }
-    
+    //reset the content of chapterPages so that we don't reupload
+    //the same images twice when the user decides to make another request
+    //to this route.
+    achm.addChapterData.chapterPages = [];
     res.json({message: achm.addChapterData.message});
 });
 
