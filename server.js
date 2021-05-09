@@ -25,14 +25,13 @@ if the operation was successful or not and why if he latter.
 app.post('/addComic', acm.addComicUpload.single('poster'), function (req, res, next) {
     if(acm.addComicData.message == "Upload was successful.") {
         db.pool.query(
-            "INSERT INTO comic(comic_title, comic_poster, comic_info, comic_views) VALUES ($1::text,$2::text,$3::text,0)",
+            "INSERT INTO comic(comic_title, comic_poster, comic_info) VALUES ($1::text,$2::text,$3::text)",
             [acm.addComicData.title, acm.addComicData.poster, acm.addComicData.info],
             (error, results) => {
                 if (error) {
                   throw error;
                 }
             }
-
         );
     }
     
@@ -44,7 +43,7 @@ app.post('/addComic', acm.addComicUpload.single('poster'), function (req, res, n
 app.post('/addChapter', achm.addChapterUpload.array('pages', 100), function (req, res, next) {
     if (achm.addChapterData.message == "Upload was successful.") {
         db.pool.query(
-            "INSERT INTO chapter(chapter_number, chapter_title, chapter_views, comic_id) VALUES ($1,$2::text,0,$3)",
+            "INSERT INTO chapter(chapter_number, chapter_title, comic_id) VALUES ($1,$2::text,$3)",
             [
              achm.addChapterData.chapterNumber,
              achm.addChapterData.chapterTitle,
@@ -83,10 +82,29 @@ app.post('/addChapter', achm.addChapterUpload.array('pages', 100), function (req
 });
 
 
+app.post('/removeComic', function (req, res, next) {
+    let comicId = req.body.comicId;
+    db.pool.query(
+        "DELETE FROM comic WHERE comic_id=$1",
+        [comicId],
+        (error, results) => {
+            if (error) {
+                throw error;
+            }
+            res.json({message: "Comic successfully deleted."});
+        }
+    );
+});
+
+
+
+
+
+
 //get the ids, title, posters and views for all comics in the comicRepo
 app.get('/comics', function (req, res, next) {
     db.pool.query(
-        "SELECT comic_id, comic_title, comic_poster, comic_views FROM comic",
+        "SELECT comic_id, comic_title, comic_poster FROM comic",
         (error, results) => {
             if (error) {
                 throw error;
