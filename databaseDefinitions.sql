@@ -21,6 +21,5 @@ CREATE TABLE comic_page (
     page_image VARCHAR(255) NOT NULL,
     chapter_number INT,
     comic_id INT,
-    FOREIGN KEY (comic_id, chapter_number) REFERENCES chapter(comic_id, chapter_number),
     PRIMARY KEY (comic_id, chapter_number, page_number)
 );

@@ -3,7 +3,7 @@ const express = require('express');
 const acm = require('./addComicManager')
 const achm = require('./addChapterManager');
 const app = express();
-const port = 3000;
+const port =  3000;
 
 //This required to access the body of post requests
 app.use(express.json());
@@ -81,7 +81,24 @@ app.post('/addChapter', achm.addChapterUpload.array('pages', 100), function (req
 app.get('/comic/:comicId', function (req, res, next) {
     let comicId = req.params.comicId;
     db.pool.query(
-        "SELECT * FROM comic NATURAL JOIN chapter WHERE comic_id=$1",
+        //"SELECT * FROM comic NATURAL JOIN chapter WHERE comic_id=$1",
+        "SELECT * FROM comic WHERE comic_id=$1",
+        [comicId],
+        (error, results) => {
+            if (error) {
+                throw error;
+            }
+            res.json(results.rows);
+        }
+    );
+});
+
+
+//get a list of chapters for a given comic by providing its id
+app.get('/comic/:comicId/chapters', function (req, res, next) {
+    let comicId = req.params.comicId;
+    db.pool.query(
+        "SELECT * FROM chapter where comic_id=$1",
         [comicId],
         (error, results) => {
             if (error) {
@@ -115,3 +132,4 @@ app.get('/comic/:comicId/:chapterNumber', function (req, res, next) {
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)
 });
+

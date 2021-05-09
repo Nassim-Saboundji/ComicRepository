@@ -9,20 +9,18 @@
 <body>
     
     <form action="http://localhost:3000/addComic" method="post" enctype="multipart/form-data">
-        <input type="text" name="title">
-        <input type="text" name="info">
+        title : <input type="text" name="title">
+        info : <input type="text" name="info">
         <input type="file" name="poster" />
         <input type="submit">
     </form>
 
     <form action="http://localhost:3000/addChapter" method="post" enctype="multipart/form-data">
-        <input type="text" name="comicId">
-        <input type="text" name="chapterNumber">
-        <input type="text" name="chapterTitle">
+        comic_id : <input type="text" name="comicId">
+        chapter_number : <input type="text" name="chapterNumber">
+        chapter_title : <input type="text" name="chapterTitle">
         <input type="file" name="pages" multiple>
         <input type="submit">
     </form>
-
-    <img src="http://localhost:3000/static/poster-1620443720620.png" alt="">
 </body>
 </html>
