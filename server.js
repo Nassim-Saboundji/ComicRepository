@@ -77,6 +77,22 @@ app.post('/addChapter', achm.addChapterUpload.array('pages', 100), function (req
     res.json({message: achm.addChapterData.message});
 });
 
+
+//get the ids, title, posters and views for all comics in the comicRepo
+app.get('/comics', function (req, res, next) {
+    db.pool.query(
+        "SELECT comic_id, comic_title, comic_poster, comic_views FROM comic",
+        (error, results) => {
+            if (error) {
+                throw error;
+            }
+            res.json(results.rows);
+        }
+    );
+});
+
+
+
 //get general information about a comic
 app.get('/comic/:comicId', function (req, res, next) {
     let comicId = req.params.comicId;

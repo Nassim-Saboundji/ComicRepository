@@ -12,7 +12,7 @@ CREATE TABLE chapter (
     chapter_title VARCHAR(255),
     chapter_views INT NOT NULL,
     comic_id INT,
-    FOREIGN KEY (comic_id) REFERENCES comic(comic_id),
+    FOREIGN KEY (comic_id) REFERENCES comic(comic_id) ON DELETE CASCADE,
     PRIMARY KEY (comic_id, chapter_number)
 );
 
@@ -21,5 +21,6 @@ CREATE TABLE comic_page (
     page_image VARCHAR(255) NOT NULL,
     chapter_number INT,
     comic_id INT,
+    FOREIGN KEY (comic_id) REFERENCES comic(comic_id) ON DELETE CASCADE,
     PRIMARY KEY (comic_id, chapter_number, page_number)
 );
