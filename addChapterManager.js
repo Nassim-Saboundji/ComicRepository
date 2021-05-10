@@ -27,6 +27,14 @@ async function checkComicId(id) {
 
 
 async function addChapterFilter(req, file, cb) {
+    
+    //cancel upload if user not logged in
+    if (req.session.logged != true) {
+        cb(null, false);
+        addChapterData.message = "Operation failed. You must login.";
+        return;
+    }
+
     addChapterData.comicId = req.body.comicId;
     addChapterData.chapterNumber = req.body.chapterNumber;
     addChapterData.chapterTitle = req.body.chapterTitle;

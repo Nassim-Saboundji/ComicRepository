@@ -67,6 +67,8 @@ that represents the comic as a whole).
 
 This route will return a json object which will tell the client
 if the operation was successful or not and why if he latter.
+
+Login verification is handled by the addComicManager.
 */
 app.post('/addComic', acm.addComicUpload.single('poster'), function (req, res, next) {
     if(acm.addComicData.message == "Upload was successful.") {
@@ -85,7 +87,7 @@ app.post('/addComic', acm.addComicUpload.single('poster'), function (req, res, n
 });
 
 
-
+//Login verification is handled by the addChapterManager for this route.
 app.post('/addChapter', achm.addChapterUpload.array('pages', 100), function (req, res, next) {
     if (achm.addChapterData.message == "Upload was successful.") {
         db.pool.query(
@@ -129,32 +131,37 @@ app.post('/addChapter', achm.addChapterUpload.array('pages', 100), function (req
 
 
 app.post('/removeComic', function (req, res, next) {
-    let comicId = req.body.comicId;
-    db.pool.query(
-        "DELETE FROM comic WHERE comic_id=$1",
-        [comicId],
-        (error, results) => {
-            if (error) {
-                throw error;
+    if (req.session.logged == true) {
+        db.pool.query(
+            "DELETE FROM comic WHERE comic_id=$1",
+            [req.body.comicId],
+            (error, results) => {
+                if (error) {
+                    throw error;
+                }
+                res.json({message: "Comic successfully deleted."});
             }
-            res.json({message: "Comic successfully deleted."});
-        }
-    );
+        );
+    } else {
+        res.json({message: "Operation failed. You must login."});
+    }
 });
 
 app.post('/removeChapter', function (req, res, next) {
-    let comicId = req.body.comicId;
-    let chapterNumber = req.body.chapterNumber;
-    db.pool.query(
-        "DELETE FROM chapter WHERE comic_id=$1 AND chapter_number=$2",
-        [comicId, chapterNumber],
-        (error, results) => {
-            if (error) {
-                throw error;
+    if (req.session.logged == true) {
+        db.pool.query(
+            "DELETE FROM chapter WHERE comic_id=$1 AND chapter_number=$2",
+            [req.body.comicId, req.body.chapterNumber],
+            (error, results) => {
+                if (error) {
+                    throw error;
+                }
+                res.json({message: "Chapter successfully deleted."});
             }
-            res.json({message: "Chapter successfully deleted."});
-        }
-    );
+        );
+    } else {
+        res.json({message: "Operation failed. You must login."})
+    }
 });
 
 

@@ -26,6 +26,14 @@ validation here. This is also why we send the data to addComicData because we ca
 elsewhere.
 */
 function addComicFilter(req, file, cb) {
+    
+    //cancel upload if user not logged in
+    if (req.session.logged != true) {
+        cb(null, false);
+        addComicData.message = "Operation failed. You must login.";
+        return;
+    }
+
     addComicData.title = req.body.title;
     addComicData.info = req.body.info;
 
