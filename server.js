@@ -96,6 +96,20 @@ app.post('/removeComic', function (req, res, next) {
     );
 });
 
+app.post('/removeChapter', function (req, res, next) {
+    let comicId = req.body.comicId;
+    let chapterNumber = req.body.chapterNumber;
+    db.pool.query(
+        "DELETE FROM chapter WHERE comic_id=$1 AND chapter_number=$2",
+        [comicId, chapterNumber],
+        (error, results) => {
+            if (error) {
+                throw error;
+            }
+            res.json({message: "Chapter successfully deleted."});
+        }
+    );
+});
 
 
 

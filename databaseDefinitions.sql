@@ -20,6 +20,7 @@ CREATE TABLE comic_page (
     chapter_number INT,
     comic_id INT,
     FOREIGN KEY (comic_id) REFERENCES comic(comic_id) ON DELETE CASCADE,
+    FOREIGN KEY (comic_id, chapter_number) REFERENCES chapter(comic_id, chapter_number) ON DELETE CASCADE,
     PRIMARY KEY (comic_id, chapter_number, page_number)
 );
 
