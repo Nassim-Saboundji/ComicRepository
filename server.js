@@ -2,6 +2,8 @@ const db = require('./dummyDBCredentials');
 const express = require('express');
 const acm = require('./addComicManager')
 const achm = require('./addChapterManager');
+const session = require('express-session');
+const secret = require('./secret');
 const app = express();
 const port =  3000;
 
@@ -12,6 +14,50 @@ app.use(express.urlencoded({ extended: true }));
 //For loading uploaded images we make the uploads folder accessible
 app.use('/static',express.static('uploads'));
 
+
+app.use(session({ 
+    secret: secret.mySecret,
+    cookie: { maxAge: 60000 },
+    resave: true,
+    saveUninitialized: true
+}));
+
+app.get('/loginAdmin', (req, res, next) => {
+    //Check if the session with the logged key exists in the session.
+    console.log(req.session.logged);
+    if (req.session.logged == undefined || req.session.logged == false) {
+        db.pool.query(
+            "SELECT EXISTS(SELECT 1 FROM admin_user WHERE username=$1::text AND user_password=sha256($2))",
+            [req.query.username, req.query.password],
+            (error, results) => {
+                if (error) {
+                    throw error;
+                }
+                if(results.rows[0].exists) {
+                    req.session.logged = true;
+                    res.json({message: "Admin is logged in."});
+                } else {
+                    req.session.logged = false;
+                    res.json({message: "Admin was not able to login."});
+                }
+            }
+        );
+    }
+
+    if (req.session.logged == true) {
+        res.json({message: "Admin is already logged in."});
+    }
+});
+
+
+app.get('/logoutAdmin', (req, res, next) => {
+    if (req.session.logged == true) {
+        req.session.logged == false;
+        res.json({message: "Admin is now logged out."});
+    } else {
+        res.json({message: "Admin is already logged out."});
+    }
+});
 
 /*
 This routes allows the user to add a comic to the comicRepo

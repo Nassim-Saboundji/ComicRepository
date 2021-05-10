@@ -1,0 +1,7 @@
+//In production gitignore this!
+
+let mySecret = "THIS IS A SECRET KEY THAT WILL BE USED TO AllOW PEOPLE TO LOG IN TO THEIR ACCOUNT ON THE COMIC REPO. I'M PURPOSEFULLY MAKING THIS A LONG STRING SO IT WILL BE DIFFICULT TO HACK!";
+
+module.exports = {
+    mySecret
+};
