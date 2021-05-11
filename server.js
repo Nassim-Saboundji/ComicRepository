@@ -4,6 +4,8 @@ const acm = require('./addComicManager')
 const achm = require('./addChapterManager');
 const session = require('express-session');
 const secret = require('./secret');
+const { default: validator } = require('validator');
+const fs = require('fs');
 const app = express();
 const port =  3000;
 
@@ -23,8 +25,18 @@ app.use(session({
 }));
 
 app.get('/loginAdmin', (req, res, next) => {
-    //Check if the session with the logged key exists in the session.
-    console.log(req.session.logged);
+    
+    if (!validator.isAlphanumeric(req.query.username)) {
+        res.json({message: "Admin username is invalid."});
+        return;
+    }
+
+    if (!validator.isAlphanumeric(req.query.password)) {
+        res.json({message: "Admin password is invalid."});
+        return;
+    }
+
+
     if (req.session.logged == undefined || req.session.logged == false) {
         db.pool.query(
             "SELECT EXISTS(SELECT 1 FROM admin_user WHERE username=$1::text AND user_password=sha256($2))",
@@ -131,7 +143,51 @@ app.post('/addChapter', achm.addChapterUpload.array('pages', 100), function (req
 
 
 app.post('/removeComic', function (req, res, next) {
+    
+    if (!validator.isInt(req.body.comicId)) {
+        res.json({message: "No comic id was provided. Please enter a valid comic id."});
+        return;
+    }
+
     if (req.session.logged == true) {
+        
+        //Delete the poster image for that comic
+        db.pool.query(
+            "SELECT comic_poster FROM comic WHERE comic_id=$1",
+            [req.body.comicId],
+            (error, results) => {
+                if (error) {
+                    throw error;
+                }
+                let posterPath = "./uploads/" + results.rows[0].comic_poster;
+                try {
+                    fs.unlinkSync(posterPath);
+                } catch(err) {
+                    console.error(err);
+                }
+            }
+        );
+
+        db.pool.query(
+            "SELECT page_image FROM comic_page WHERE comic_id=$1",
+            [req.body.comicId],
+            (error, results) => {
+                if (error) {
+                   throw error; 
+                } 
+                if (results.rows.length != 0) {
+                    for (let i = 0; i < results.rows.length; i++) {
+                        let posterPath = "./uploads/" + results.rows[i].page_image;
+                        try {
+                            fs.unlinkSync(posterPath);
+                        } catch(err) {
+                            console.error(err);
+                        }
+                    }
+                }
+            }
+        );
+
         db.pool.query(
             "DELETE FROM comic WHERE comic_id=$1",
             [req.body.comicId],
@@ -139,7 +195,7 @@ app.post('/removeComic', function (req, res, next) {
                 if (error) {
                     throw error;
                 }
-                res.json({message: "Comic successfully deleted."});
+                res.json({message: "If the comic existed it was successfully deleted."});
             }
         );
     } else {
