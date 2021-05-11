@@ -14,18 +14,25 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 //For loading uploaded images we make the uploads folder accessible
+// through the static route
+// so we can get an image with ex: http://.../static/imageName.png
 app.use('/static',express.static('uploads'));
 
 
 app.use(session({ 
     secret: secret.mySecret,
-    cookie: { maxAge: 60000 },
+    cookie: { maxAge: 3600000 }, //A user session expires after 60 minutes
     resave: true,
     saveUninitialized: true
 }));
 
-app.get('/loginAdmin', (req, res, next) => {
-    
+/*
+This route allows a user to authenticate oneself as an Admin which grants the ability
+of using post routes. The query parameters are username and password.
+Returns a json object which contains a message propriety which indicates if the user has
+successfully logged as an Admin.
+*/
+app.get('/loginAdmin', (req, res, next) => {  
     if (!validator.isAlphanumeric(req.query.username)) {
         res.json({message: "Admin username is invalid."});
         return;
@@ -61,7 +68,10 @@ app.get('/loginAdmin', (req, res, next) => {
     }
 });
 
-
+/*
+Route that allows an admin to logout.
+Returns a json object that indicates if the admin has successfully logged out.
+*/
 app.get('/logoutAdmin', (req, res, next) => {
     if (req.session.logged == true) {
         req.session.logged == false;
@@ -72,16 +82,15 @@ app.get('/logoutAdmin', (req, res, next) => {
 });
 
 /*
-This routes allows the user to add a comic to the comicRepo
-The user must have submitted a title, information about the comic (synopsis, authors, etc...)
-and an image file for the comic poster (which is a cover image 
-that represents the comic as a whole).
+An admin can add a comic to the web app using this route.
+The required body parameters are title, info and file. 
+Returns a json object containing a message propriety and if the comic was added
+successfully a comic_id propriety which contains the id of the comic in the database.
 
-This route will return a json object which will tell the client
-if the operation was successful or not and why if he latter.
-
-Login verification is handled by the addComicManager.
-*/
+Note : Look at addComicManager to see how the body parameters are handled. It was required
+to do them there because of some limitations of the Multer library which is what I used
+to make uploads.
+*/ 
 app.post('/addComic', acm.addComicUpload.single('poster'), function (req, res, next) {
     if(acm.addComicData.message == "Upload was successful.") {
         db.pool.query(
@@ -93,13 +102,36 @@ app.post('/addComic', acm.addComicUpload.single('poster'), function (req, res, n
                 }
             }
         );
+
+        db.pool.query(
+            "SELECT comic_id FROM comic WHERE comic_poster=$1",
+            [acm.addComicData.poster],
+            (error, results) => {
+                if (error) {
+                    throw error;
+                }
+                res.json({
+                    message: acm.addComicData.message,
+                    comic_id: results.rows[0].comic_id
+                });    
+            }
+        );
+    } else {
+        res.json({message: acm.addComicData.message}); 
     }
-    
-    res.json({message: acm.addComicData.message});
 });
 
 
-//Login verification is handled by the addChapterManager for this route.
+/*
+An admin can use this route to add a chapter and the related comic pages to the web app.
+The body parameters are comicId, chapterNumber and chapterTitle. Like with the addComic route
+the body parameters are handled and validated by its own manager the addChapterManager. This
+is once again due to some limitations with how the Multer library which takes care of file uploads
+works. 
+
+Returns a json object with a message propriety which indicates whenever or not the operation
+was successful.
+*/
 app.post('/addChapter', achm.addChapterUpload.array('pages', 100), function (req, res, next) {
     if (achm.addChapterData.message == "Upload was successful.") {
         db.pool.query(
@@ -141,7 +173,14 @@ app.post('/addChapter', achm.addChapterUpload.array('pages', 100), function (req
     res.json({message: achm.addChapterData.message});
 });
 
+/*
+Allows an admin to remove a comic from the web app.
+Returns a json object with a message propriety which indicates whenever the
+operation was successful.
 
+This is a post method instead of a delete method simply because I was not able to figure
+out how to pass parameters for a delete route in express.
+*/
 app.post('/removeComic', function (req, res, next) {
     
     if (!validator.isInt(req.body.comicId)) {
@@ -203,6 +242,9 @@ app.post('/removeComic', function (req, res, next) {
     }
 });
 
+/*
+Same thing as with the removeComic route but for a specific chapter.
+*/
 app.post('/removeChapter', function (req, res, next) {
     
     if (!validator.isInt(req.body.comicId)) {
@@ -259,7 +301,11 @@ app.post('/removeChapter', function (req, res, next) {
 
 
 
-//get the ids, title, posters and views for all comics in the comicRepo
+
+/*
+Route for getting the ids, title, posters and views for all comics in the comicRepo
+in a json object.
+*/
 app.get('/comics', function (req, res, next) {
     db.pool.query(
         "SELECT comic_id, comic_title, comic_poster FROM comic",
@@ -274,11 +320,12 @@ app.get('/comics', function (req, res, next) {
 
 
 
-//get general information about a comic
+/*
+Same as the /comics route but for one specific comic. Requires the comicId parameter.
+*/
 app.get('/comic/:comicId', function (req, res, next) {
     let comicId = req.params.comicId;
     db.pool.query(
-        //"SELECT * FROM comic NATURAL JOIN chapter WHERE comic_id=$1",
         "SELECT * FROM comic WHERE comic_id=$1",
         [comicId],
         (error, results) => {
@@ -291,7 +338,9 @@ app.get('/comic/:comicId', function (req, res, next) {
 });
 
 
-//get a list of chapters for a given comic by providing its id
+/*
+Route for getting a list of chapters for a given comic by providing its comicId.
+*/
 app.get('/comic/:comicId/chapters', function (req, res, next) {
     let comicId = req.params.comicId;
     db.pool.query(
@@ -307,7 +356,10 @@ app.get('/comic/:comicId/chapters', function (req, res, next) {
 });
 
 
-//get all the pages of a given chapter of a given comic
+/*
+Route for getting all the pages of a given chapter of a given comic. Requires a comicId
+and a chapterNumber.
+*/
 app.get('/comic/:comicId/:chapterNumber', function (req, res, next) {
     let comicId = req.params.comicId;
     let chapterNumber = req.params.chapterNumber;
