@@ -204,7 +204,42 @@ app.post('/removeComic', function (req, res, next) {
 });
 
 app.post('/removeChapter', function (req, res, next) {
+    
+    if (!validator.isInt(req.body.comicId)) {
+        res.json({message: "No comic id was provided. Please enter a valid comic id."});
+        return;
+    }
+    
+    if (!validator.isInt(req.body.chapterNumber)) {
+        res.json({message: "No chapter number was provided. Please enter a valid chapter number."});
+    }
+
     if (req.session.logged == true) {
+        
+        //we first delete the images on disk before deleting rows in the database
+        db.pool.query(
+            "SELECT page_image FROM comic_page where comic_id=$1 AND chapter_number=$2",
+            [req.body.comicId, req.body.chapterNumber],
+            (error, results) => {
+                if (error) {
+                    throw error;
+                } 
+
+                if (results.rows.length != 0) {
+                    for (let i = 0; i < results.rows.length; i++) {
+                        let posterPath = "./uploads/" + results.rows[i].page_image;
+                        try {
+                            fs.unlinkSync(posterPath);
+                        } catch(err) {
+                            console.error(err);
+                        }
+                    }
+                }
+                
+            }
+        );
+        
+        
         db.pool.query(
             "DELETE FROM chapter WHERE comic_id=$1 AND chapter_number=$2",
             [req.body.comicId, req.body.chapterNumber],
