@@ -392,3 +392,9 @@ app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)
 });
 
+
+//we export the app variable so we can use it for our tests.
+module.exports = {
+    app,
+    port
+};
