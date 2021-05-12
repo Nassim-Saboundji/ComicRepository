@@ -6,6 +6,7 @@ const session = require('express-session');
 const secret = require('./secret');
 const { default: validator } = require('validator');
 const fs = require('fs');
+const rateLimit = require("express-rate-limit");
 const app = express();
 const port =  3000;
 
@@ -13,10 +14,19 @@ const port =  3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+//For preventing DDoS attacks
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100 // limit each IP to 100 requests per windowMs
+});
+  
+//the rate limiting applies to all requests
+app.use(limiter);
+
 //For loading uploaded images we make the uploads folder accessible
 // through the static route
 // so we can get an image with ex: http://.../static/imageName.png
-app.use('/static',express.static('uploads'));
+app.use('/static', express.static('uploads'));
 
 
 app.use(session({ 
