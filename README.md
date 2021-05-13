@@ -16,7 +16,9 @@ Now you can start using the REST API by launching the server by using the comman
 
 Here are the various routes that can be used: 
 
-**Get /comics ** : will display all the comics that are currently uploaded to the comic repository. you'll get as an example :
+*Get /comics *
+
+will display all the comics that are currently uploaded to the comic repository. you'll get as an example :
 ```
 [
   {
