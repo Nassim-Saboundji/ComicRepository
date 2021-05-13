@@ -28,7 +28,5 @@
     "pg": "^8.6.0",
     "validator": "^13.6.0"
   },
-  "devDependencies": {
-    
-  }
+  "devDependencies": {}
 }
