@@ -92,6 +92,7 @@ Example : http://localhost:3000/comic/8/chapters
 ]
 ```
 __ [GET] http://localhost:3000/comic/:comicId/:chapterNumber __
+
 To get all the pages of a given chapter of a given comic. Example : http://localhost:3000/comic/8/1
 ```
 [
@@ -117,4 +118,18 @@ To get all the pages of a given chapter of a given comic. Example : http://local
     "page_image": "pages-1620918186067.jpeg"
   }
 ]
+```
+Also you can access each images using the static route. Example: http://localhost:3000/static/pages-1620918186057.jpeg (This is the link you want to put inside an img tag to display the image pages-1620918186057.jpeg in the frontend) 
+
+__ [GET] http://localhost:3000/loginAdmin __
+
+This is used to login the user so one can uses the [POST] routes below. By default there is only one admin account with username: admin and password: 1234 
+
+As an example you can login with http://localhost:3000/loginAdmin?username=admin&password=1234
+
+```
+{
+  "message": "Admin is logged in."
+}
+
 ```
