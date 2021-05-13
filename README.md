@@ -55,7 +55,7 @@ will display all the comics that are currently uploaded to the comic repository.
 
 __ [GET] http://localhost:3000/comic/:comicId __
 
-Gives you relevant information for a given comic with comicId provided in the route in the comic repository.
+Gives you relevant information for a given comic the comic repository with comicId provided.
 Example : http://localhost:3000/comic/8
 ```
 [
