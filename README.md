@@ -123,7 +123,7 @@ Also you can access each images using the static route. Example: http://localhos
 
 __ [GET] http://localhost:3000/loginAdmin __
 
-This is used to login the user so one can uses the [POST] routes below. By default there is only one admin account with username: admin and password: 1234 
+This is used to login the user so one can use the [POST] routes below. By default there is only one admin account with username: admin and password: 1234 
 
 As an example you can login with http://localhost:3000/loginAdmin?username=admin&password=1234
 
