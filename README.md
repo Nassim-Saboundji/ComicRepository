@@ -5,7 +5,7 @@ This is only the backend API. For the Frontend look at this repository : ___(WOR
 
 # How To Run
 
-First you should cd into the repo and run the commande npm install to install
+First you should cd into the repo and run the command `npm install` to install
 all the required dependencies. After this is done create an empty folder
 called uploads. This is where the uploaded comic posters and pages will be put.
 
