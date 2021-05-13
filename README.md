@@ -9,7 +9,10 @@ First you should cd into the repo and run the commande npm install to install
 all the required dependencies. After this is done create an empty folder
 called uploads. This is where the uploaded comic posters and pages will be put.
 
-Now you must have postgreSQL installed on your machine (A quick google search will teach you how, the installation is different depending on your OS). You can use the default postgres user like so `psql postgres` once this is done create a table named comicrepo with `create table comicrepo;`. That's it! Exit postgres with the `exit` command.
+Now you must have postgreSQL installed on your machine (A quick google search will teach you how, the installation is different depending on your OS). You can use the default postgres user like so `psql postgres` once this is done create a database named comicrepo with `create database comicrepo;`.
+Then connect yourself to that database with the command `\c comicrepo`. 
+Then do `\i databaseDefinitions.sql` to load the tables relevant to the web app.
+That's it! Exit postgres with the `exit` command.
 
 Now you can start using the REST API by launching the server by using the command
 `npx nodemon`
@@ -66,6 +69,7 @@ Example : http://localhost:3000/comic/8
 ```
 
 __ [GET] http://localhost:3000/comic/:comicId/chapters __
+
 Give you relevant information for every chapter uploaded to the comic repository for the comic with the provided comicId.
 Example : http://localhost:3000/comic/8/chapters
 ```
@@ -84,6 +88,33 @@ Example : http://localhost:3000/comic/8/chapters
     "chapter_number": 3,
     "chapter_title": "End",
     "comic_id": 8
+  }
+]
+```
+__ [GET] http://localhost:3000/comic/:comicId/:chapterNumber __
+To get all the pages of a given chapter of a given comic. Example : http://localhost:3000/comic/8/1
+```
+[
+  {
+    "page_image": "pages-1620918186057.jpeg"
+  },
+  {
+    "page_image": "pages-1620918186061.jpeg"
+  },
+  {
+    "page_image": "pages-1620918186052.jpeg"
+  },
+  {
+    "page_image": "pages-1620918186063.jpeg"
+  },
+  {
+    "page_image": "pages-1620918186065.jpeg"
+  },
+  {
+    "page_image": "pages-1620918186071.png"
+  },
+  {
+    "page_image": "pages-1620918186067.jpeg"
   }
 ]
 ```
