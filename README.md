@@ -16,7 +16,7 @@ Now you can start using the REST API by launching the server by using the comman
 
 Here are the various routes that can be used: 
 
-__Get /comics__
+__ [GET] http://localhost:3000/comics __
 
 will display all the comics that are currently uploaded to the comic repository. you'll get as an example :
 ```
@@ -48,4 +48,42 @@ will display all the comics that are currently uploaded to the comic repository.
   }
 ]
 
+```
+
+__ [GET] http://localhost:3000/comic/:comicId __
+
+Gives you relevant information for a given comic with comicId provided in the route in the comic repository.
+Example : http://localhost:3000/comic/8
+```
+[
+  {
+    "comic_id": 8,
+    "comic_title": "Calvin and Hobbes",
+    "comic_poster": "poster-1620750069541.jpeg",
+    "comic_info": "Calvin and Hobbes is a daily American comic strip created by cartoonist Bill Watterson that was syndicated from November 18, 1985 to December 31, 1995"
+  }
+]
+```
+
+__ [GET] http://localhost:3000/comic/:comicId/chapters __
+Give you relevant information for every chapter uploaded to the comic repository for the comic with the provided comicId.
+Example : http://localhost:3000/comic/8/chapters
+```
+[
+  {
+    "chapter_number": 1,
+    "chapter_title": "Beginning",
+    "comic_id": 8
+  },
+  {
+    "chapter_number": 2,
+    "chapter_title": "Middle",
+    "comic_id": 8
+  },
+  {
+    "chapter_number": 3,
+    "chapter_title": "End",
+    "comic_id": 8
+  }
+]
 ```
