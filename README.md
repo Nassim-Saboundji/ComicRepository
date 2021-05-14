@@ -133,3 +133,40 @@ As an example you can login with http://localhost:3000/loginAdmin?username=admin
 }
 
 ```
+
+__ [GET] http://localhost:3000/logoutAdmin __
+
+Allows an admin to logout.
+
+```
+{
+  message: "Admin is now logged out."
+}
+
+```
+
+__ [POST] http://localhost:3000/addComic __
+
+Allows an admin to add a new comic to the repository. The required body parameters are title, info, file.
+
+Example of an html form :
+```
+<form action="http://localhost:3000/addComic" method="post" enctype="multipart/form-data">
+        title : <input type="text" name="title">
+        info : <input type="text" name="info">
+        <input type="file" name="poster" />
+        <input type="submit">
+</form>
+```
+
+The response will be a message confirming the operation was successful and the comic_id
+of the newly added comic.
+
+```
+{
+  "message": "Upload was successful.",
+  "comic_id": 2
+}
+
+```
+
