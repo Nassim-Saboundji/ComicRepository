@@ -299,6 +299,17 @@ app.post('/removeChapter', function (req, res, next) {
                 if (error) {
                     throw error;
                 }
+            }
+        );
+
+        //we delete the individual pages in the comic_page table as well.
+        db.pool.query(
+            "DELETE FROM comic_page WHERE comic_id=$1 AND chapter_number=$2",
+            [req.body.comicId, req.body.chapterNumber],
+            (error, results) => {
+                if (error) {
+                    throw error;
+                }
                 res.json({message: "Chapter successfully deleted."});
             }
         );
