@@ -170,3 +170,27 @@ of the newly added comic.
 
 ```
 
+__ [POST] http://localhost:3000/addChapter
+
+Allows an admin to add a chapter to an existing comic in the repository.
+The body parameters are the comicId of the comic we want to add a chapter to, the chapterNumber,
+chapterTitle and pages.
+
+Example of a form that could be used to perform a request for that route
+```
+    <form action="http://localhost:3000/addChapter" method="post" enctype="multipart/form-data">
+        comic_id : <input type="text" name="comicId">
+        chapter_number : <input type="text" name="chapterNumber">
+        chapter_title : <input type="text" name="chapterTitle">
+        <input type="file" name="pages" multiple>
+        <input type="submit">
+    </form>
+```
+
+The response  
+```
+{
+  message: "Upload was successful."
+}
+
+```
