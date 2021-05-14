@@ -187,10 +187,47 @@ Example of a form that could be used to perform a request for that route
     </form>
 ```
 
-The response  
+The response should be :
 ```
 {
   message: "Upload was successful."
+}
+
+```
+
+__ [POST] http://localhost:3000/removeComic __
+
+The body parameter is the comicId of the comic you want to remove.
+
+```
+<form action="http://localhost:3000/removeComic" method="post">
+        comic_id : <input type="text" name="comicId">
+        <input type="submit">
+</form>
+```
+
+The response should be : 
+```
+{
+  message: "If the comic existed it was successfully deleted."
+}
+```
+
+__ [POST] http://localhost:3000/removeChapter __
+
+```
+<form action="http://localhost:3000/removeChapter" method="post">
+    comic_id : <input type="text" name="comicId">
+    chapter_number : <input type="text" name="chapterNumber">
+    <input type="submit">
+</form>
+```
+
+The response should be :
+
+```
+{
+  message: "Chapter successfully deleted."
 }
 
 ```
