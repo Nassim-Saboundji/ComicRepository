@@ -36,6 +36,10 @@ app.use(session({
     saveUninitialized: true
 }));
 
+//make the frontend available through the root.
+app.use('/', express.static('frontend'));
+
+
 /*
 This route allows a user to authenticate oneself as an Admin which grants the ability
 of using post routes. The query parameters are username and password.
