@@ -125,8 +125,7 @@ app.post('/addComic', acm.addComicUpload.single('poster'), function (req, res, n
                     throw error;
                 }
                 res.json({
-                    message: acm.addComicData.message,
-                    comic_id: results.rows[0].comic_id
+                    message: acm.addComicData.message
                 });    
             }
         );

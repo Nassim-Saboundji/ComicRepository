@@ -1,31 +1,7 @@
-window.addEventListener("DOMContentLoaded", () => {
-    generateHomePage();
-});
 
-//This is our router
-window.addEventListener('hashchange', () => {
-    
-    let currentHash = window.location.hash;
-    let currentHashArray = currentHash.split('/');
-    
-    if (currentHashArray[1] == "comics") {
-        document.getElementById("root").replaceChildren();
-        generateComicPage(currentHashArray[2]);
-    }
-    
-    if (currentHashArray[1] == "upload") {
-
-    }
-
-    if (currentHashArray[1] == "login") {
-
-    }
-
-});
-
-async function generateHomePage() {
+async function makeHomePage() {
     let data = await getComics();
-    generateComicSection(data);
+    makeResultSection(data);
 }
 
 
@@ -34,7 +10,7 @@ async function getComics() {
     return response.json();
 }
 
-function generateComicSection(data) {
+function makeResultSection(data) {
     for (let i = 0; i < data.length; i++) {
         comicCard(data[i]);
     }
@@ -51,11 +27,12 @@ function comicCard(comicData) {
     poster.src = "http://localhost:3000/static/" + comicData.comic_poster;
 
     //add an event listener to every card
-    card.addEventListener('click', function() {
+    card.addEventListener('click', async function() {
         // clean the DOM 
         document.getElementById("root").replaceChildren(); 
         window.location.hash = "/comics/" + comicData.comic_id;
-        generateComicPage(comicData.comic_id);
+        let result = await getComicInfo(comicData.comic_id);
+        console.log(result);
     });
 
     card.appendChild(poster);
@@ -66,10 +43,12 @@ function comicCard(comicData) {
 }
 
 
-
-
-function generateComicPage(comicId) {
-    console.log(comicId);
+async function getComicInfo(comicId) {
+    const infoResponse = await fetch('http://localhost:3000/comic/' + comicId);
+    return infoResponse.json();
 }
+
+
+
 
 
