@@ -16,7 +16,7 @@ function injectComicsLinks(comics) {
         a.href = "./comicInfoPage.html";
         
         a.addEventListener('click', () => {
-            localStorage.setItem('comic_id', comics[i].comic_id);
+            localStorage.setItem('comicId', comics[i].comic_id);
         });
         
         
