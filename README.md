@@ -1,7 +1,7 @@
 # comicRepo Backend REST API
 
 A web app for hosting an online comic repository it supports the ability of uploading comics and reading them.
-This is only the backend API. For the Frontend look at this repository : ___(WORK IN PROGRESS)___
+This is only the backend API.
 
 # How To Run
 
