@@ -16,7 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 
 //For preventing DDoS attacks
 const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
+    windowMs: 3 * 60 * 1000, // 3 minutes
     max: 100 // limit each IP to 100 requests per windowMs
 });
   
