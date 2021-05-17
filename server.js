@@ -29,16 +29,15 @@ app.use(limiter);
 app.use('/static', express.static('uploads'));
 
 
+//make frontend available
+app.use('/', express.static('frontend'));
+
 app.use(session({ 
     secret: secret.mySecret,
     cookie: { maxAge: 3600000 }, //A user session expires after 60 minutes
     resave: true,
     saveUninitialized: true
 }));
-
-//make the frontend available through the root.
-app.use('/', express.static('frontend'));
-
 
 /*
 This route allows a user to authenticate oneself as an Admin which grants the ability
