@@ -39,7 +39,7 @@ function injectComic(comicInfo, comicChapters) {
     let chapters = document.getElementById('chapters');
     for (let i = 0; i < comicChapters.length; i++) {
         let a = document.createElement('a');
-        let chapter = comicChapters[0];
+        let chapter = comicChapters[i];
         a.innerText = chapter.chapter_number + " : " + chapter.chapter_title;
         a.href = './readChapter.html'
         a.addEventListener('click', () => {
