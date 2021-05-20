@@ -9,14 +9,18 @@ const fs = require('fs');
 const rateLimit = require("express-rate-limit");
 const app = express();
 const port =  3000;
+const cors = require('cors');
 
 //This required to access the body of post requests
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+//allow CORS
+app.use(cors());
+
 //For preventing DDoS attacks
 const limiter = rateLimit({
-    windowMs: 3 * 60 * 1000, // 3 minutes
+    windowMs: 1 * 60 * 1000, // 1 minute
     max: 100 // limit each IP to 100 requests per windowMs
 });
   
@@ -27,10 +31,6 @@ app.use(limiter);
 // through the static route
 // so we can get an image with ex: http://.../static/imageName.png
 app.use('/static', express.static('uploads'));
-
-
-//make frontend available
-app.use('/', express.static('frontend'));
 
 app.use(session({ 
     secret: secret.mySecret,
