@@ -3,10 +3,52 @@ const express = require("express");
 const server = require("../server");
 const session = require('express-session');
 const secret = require('../secret');
+const expect = require('chai').expect;
+
 
 describe("GET /loginAdmin", function () {
-    
-    it("Login as an admin", async function () {
+
+    it("Should login user as admin.", async function () {
+        var mockApp = express();
+        mockApp.use(session({ 
+            secret: secret.mySecret,
+            cookie: { maxAge: 3600000 }, //A user session expires after 60 minutes
+            resave: true,
+            saveUninitialized: true
+        }));
+        mockApp.all('*', function(req, res, next) {
+            req.session.logged = false;
+            next();
+        });
+        mockApp.use(server.app);
+
+        const response = await request(mockApp).get('/loginAdmin?username=admin&password=1234');
+        expect(response.body.message).to.eql("Admin is logged in.");
+    });
+
+
+    it("Should notify admin that he's already logged in.", async function () {
+        var mockApp = express();
+        mockApp.use(session({ 
+            secret: secret.mySecret,
+            cookie: { maxAge: 3600000 }, //A user session expires after 60 minutes
+            resave: true,
+            saveUninitialized: true
+        }));
+        mockApp.all('*', function(req, res, next) {
+            req.session.logged = true; //we are already logged in.
+            next();
+        });
+        mockApp.use(server.app);
+
+        const response = await request(mockApp).get('/loginAdmin?username=admin&password=1234');
+        expect(response.body.message).to.eql("Admin is already logged in.");
+    });
+});
+
+
+describe("GET /logoutAdmin", function () {    
+    it("Should logout the admin.", async function () {
         var mockApp = express();
         mockApp.use(session({ 
             secret: secret.mySecret,
@@ -22,13 +64,9 @@ describe("GET /loginAdmin", function () {
         });
         mockApp.use(server.app);
       
-        request(mockApp)
-        .get('/logoutAdmin')
-        .expect(200)
-        .end(function(err, res) {
-            if (err) throw err;
-            console.log(res.body.message);
-        });
+        const response = await request(mockApp).get('/logoutAdmin');
+        expect(response.body.message).to.eql("Admin is now logged out.");
+        
     });
 });
 
