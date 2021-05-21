@@ -70,3 +70,33 @@ describe("GET /logoutAdmin", function () {
     });
 });
 
+describe("POST /addComic", function () {
+
+    it("Should add a comic to the comic repository", async function () {
+        var mockApp = express();
+        mockApp.use(session({ 
+            secret: secret.mySecret,
+            cookie: { maxAge: 3600000 }, //A user session expires after 60 minutes
+            resave: true,
+            saveUninitialized: true
+        }));
+        mockApp.all('*', function(req, res, next) {
+            req.session.logged = true;
+            next();
+        });
+        mockApp.use(server.app);
+
+        const response = await request(mockApp)
+        .post('/addComic')
+        .set({
+            'Content-Type': 'application/json',
+        })
+        .field('title', 'Calvin and Hobbes')
+        .field('info', 'This is a comic about a little boy and his tiger plushy.')
+        .attach('poster', './calvinAndHobbes.png');
+        console.log(response.body);
+        expect(response.body.message).to.eql("Upload was successful.");
+        //expect(response.body.comicId).to.be.a("number");
+        this.timeout(10000);
+    });
+});
