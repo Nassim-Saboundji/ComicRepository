@@ -4,7 +4,7 @@ const server = require("../server");
 const session = require('express-session');
 const secret = require('../secret');
 const expect = require('chai').expect;
-
+const db = require('../dummyDBCredentials');
 
 describe("GET /loginAdmin", function () {
 
@@ -125,3 +125,37 @@ describe("POST /addComic", function () {
     });
 });
 
+describe("POST /removeComic" , function () {
+    it("Should remove the comic that was added in the previous test.", async function () {
+        const comicIdToRemove = await db.pool.query(
+            "SELECT comic_id FROM comic WHERE comic_title='Calvin and Hobbes'"
+        );
+
+        const id = await comicIdToRemove.rows[0]["comic_id"] + "";
+        const data = {comicId: id};
+
+        var mockApp = express();
+        mockApp.use(session({ 
+            secret: secret.mySecret,
+            cookie: { maxAge: 3600000 }, //A user session expires after 60 minutes
+            resave: true,
+            saveUninitialized: true
+        }));
+        mockApp.all('*', function(req, res, next) {
+            req.session.logged = true;
+            next();
+        });
+
+        mockApp.use(server.app);
+      
+        const response = await request(mockApp)
+        .post('/removeComic')
+        .set({
+            'Content-Type': 'application/json',
+        })
+        .send(data);
+        expect(response.body.message).to.eql("If the comic existed it was successfully deleted.")
+      
+        
+    });
+});
