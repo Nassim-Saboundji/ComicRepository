@@ -2,9 +2,9 @@
   "name": "comicrepo",
   "version": "1.0.0",
   "description": "A web app for hosting an online comic repository",
-  "main": "server.js",
+  "main": "./src/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "cd tests && mocha test.js"
   },
   "repository": {
     "type": "git",
@@ -28,5 +28,9 @@
     "multer": "^1.4.2",
     "pg": "^8.6.0",
     "validator": "^13.6.0"
+  },
+  "devDependencies": {
+    "chai": "^4.3.4",
+    "supertest": "^6.1.3"
   }
 }

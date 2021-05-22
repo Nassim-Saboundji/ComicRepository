@@ -1,10 +1,10 @@
 const request = require("supertest");
 const express = require("express");
-const server = require("../server");
+const server = require("../src/server");
 const session = require('express-session');
-const secret = require('../secret');
+const secret = require('../src/secrets/secret');
 const expect = require('chai').expect;
-const db = require('../dummyDBCredentials');
+const db = require('../src/database/dummyDBCredentials');
 
 describe("GET /loginAdmin", function () {
 
