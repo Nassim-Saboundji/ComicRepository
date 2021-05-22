@@ -168,6 +168,24 @@ describe("POST /addChapter", function () {
 });
 
 
+describe("GET /comics", function () {
+    it(`Should retrieve the comicId, comicTitle and comicPoster
+     section of all comics in the repository.`,
+     async function () {
+        const response = await request(server.app)
+        .get('/comics');
+        
+        expect(response.body).to.be.a('Array');
+        for (let i = 0; i < response.body.length; i++ ) {
+            expect(response.body[i].comicId).to.be.a('number');
+            expect(response.body[i].comicTitle).to.be.a('string');
+            expect(response.body[i].comicPoster).to.be.a('string');
+        }
+        
+    });
+});
+
+
 describe("POST /removeChapter", function () {
     it("Should remove the chapter added in the previous test.", async function () {
         this.timeout(3000);
