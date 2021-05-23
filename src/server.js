@@ -16,7 +16,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 //allow CORS
-app.use(cors());
+app.use(cors({
+    credentials: true,
+    origin: "http://localhost:3001"
+}));
 
 //For preventing DDoS attacks
 const limiter = rateLimit({
@@ -34,9 +37,12 @@ app.use('/static', express.static('uploads'));
 
 app.use(session({ 
     secret: secret.mySecret,
-    cookie: { maxAge: 3600000 }, //A user session expires after 60 minutes
-    resave: true,
-    saveUninitialized: true
+    cookie: { 
+        maxAge: 3600000,
+    }, //A user session expires after 60 minutes
+    resave: false,
+    saveUninitialized: true,
+    withCredentials: true 
 }));
 
 /*
@@ -317,7 +323,7 @@ in a json object.
 */
 app.get('/comics', function (req, res, next) {
     db.pool.query(
-        "SELECT comic_id, comic_title, comic_poster FROM comic",
+        `SELECT comic_id "comicId", comic_title "comicTitle", comic_poster "comicPoster" FROM comic`,
         (error, results) => {
             if (error) {
                 throw error;
@@ -335,7 +341,7 @@ Same as the /comics route but for one specific comic. Requires the comicId param
 app.get('/comic/:comicId', function (req, res, next) {
     let comicId = req.params.comicId;
     db.pool.query(
-        "SELECT * FROM comic WHERE comic_id=$1",
+        `SELECT comic_title "comicTitle", comic_poster "comicPoster", comic_info "comicInfo" FROM comic WHERE comic_id=$1`,
         [comicId],
         (error, results) => {
             if (error) {
@@ -353,7 +359,7 @@ Route for getting a list of chapters for a given comic by providing its comicId.
 app.get('/comic/:comicId/chapters', function (req, res, next) {
     let comicId = req.params.comicId;
     db.pool.query(
-        "SELECT * FROM chapter where comic_id=$1",
+        `SELECT chapter_number "chapterNumber", chapter_title "chapterTitle" FROM chapter where comic_id=$1`,
         [comicId],
         (error, results) => {
             if (error) {
@@ -373,7 +379,7 @@ app.get('/comic/:comicId/:chapterNumber', function (req, res, next) {
     let comicId = req.params.comicId;
     let chapterNumber = req.params.chapterNumber;
     db.pool.query(
-        "SELECT page_image FROM comic_page WHERE comic_id=$1 AND chapter_number=$2",
+        `SELECT page_image "pageImage" FROM comic_page WHERE comic_id=$1 AND chapter_number=$2`,
         [comicId, chapterNumber],
         (error, results) => {
             if (error) {
