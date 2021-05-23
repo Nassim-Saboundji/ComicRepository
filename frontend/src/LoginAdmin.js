@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react';
+import validator from 'validator';
 
 class LoginAdmin extends React.Component {
     
@@ -8,7 +9,7 @@ class LoginAdmin extends React.Component {
             username: "",
             password: "",
             logged: false,
-            onLoginMessage: ""
+            failedLoginMessage: ""
         };
 
         this.login = this.login.bind(this);
@@ -24,7 +25,31 @@ class LoginAdmin extends React.Component {
         });
     }
 
+   
+
     async login() {
+        
+        const validationResults = [
+            validator.isAlphanumeric(this.state.username),
+            validator.isAlphanumeric(this.state.password)
+        ]
+        
+        if (!(validationResults[0]) && !(validationResults[1])) {
+            this.setState({failedLoginMessage: "Username and password are invalid."});
+            return;
+        }
+
+        if (validationResults[0] === false) {
+            this.setState({failedLoginMessage: "Username is invalid."});
+            return;
+        }
+
+        if (validationResults[1] === false) {
+            this.setState({failedLoginMessage: "Password is invalid."});
+            return;
+        }
+        
+        
         const response = await (await fetch(`
         http://localhost:3000/loginAdmin?username=${this.state.username}&password=${this.state.password}
         `,{
@@ -35,13 +60,14 @@ class LoginAdmin extends React.Component {
         if (response.message === "Admin is logged in." || response.message === "Admin is already logged in.") {
             this.setState({logged: true});
         } else {
-            this.setState({onLoginMessage: response.message});
+            this.setState({failedLoginMessage: response.message});
         }    
     }
 
     render() {
 
         if (this.state.logged === true) {
+            //temporary should create dashboard component.
             return(
                 <Fragment>
                     <h1>Dashboard</h1>
@@ -61,7 +87,7 @@ class LoginAdmin extends React.Component {
                 <br/>
                 <button onClick={this.login}>Login</button>
                 <br/>
-                <p>{this.state.onLoginMessage}</p>
+                <p>{this.state.failedLoginMessage}</p>
             </Fragment>
         );
           
