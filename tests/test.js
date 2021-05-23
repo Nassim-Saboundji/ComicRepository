@@ -170,11 +170,11 @@ describe("POST /addChapter", function () {
 
 describe("GET /comics", function () {
     it(`Should retrieve the comicId, comicTitle and comicPoster
-     section of all comics in the repository.`,
+     of all comics in the repository.`,
      async function () {
         const response = await request(server.app)
         .get('/comics');
-        
+
         expect(response.body).to.be.a('Array');
         for (let i = 0; i < response.body.length; i++ ) {
             expect(response.body[i].comicId).to.be.a('number');
@@ -185,6 +185,57 @@ describe("GET /comics", function () {
     });
 });
 
+describe("GET /comic/:comicId", function () {
+    it(`Should retrieve comicTitle, comicPoster,
+    comicInfo for the comic associated with comicId.`, async function () {
+        const comicId = await db.pool.query(
+            "SELECT comic_id FROM comic WHERE comic_title='Calvin and Hobbes'"
+        );
+
+        const id = await comicId.rows[0]["comic_id"] + "";
+
+        const response = await request(server.app)
+        .get('/comic/' + id);
+
+        expect(response.body).to.be.a('Array');
+        expect(response.body[0].comicTitle).to.be.a('string');
+        expect(response.body[0].comicPoster).to.be.a('string');
+        expect(response.body[0].comicInfo).to.be.a('string');
+     });
+});
+
+
+describe("GET /comic/:comicId/chapters", function () {
+    it("Should retrieve all chapters for a comic associated with comicId", async function () {
+        const comicId = await db.pool.query(
+            "SELECT comic_id FROM comic WHERE comic_title='Calvin and Hobbes'"
+        );
+
+        const id = await comicId.rows[0]["comic_id"] + "";
+
+        const response = await request(server.app)
+        .get('/comic/' + id + '/chapters');
+
+        expect(response.body[0].chapterNumber).to.be.a('number');
+        expect(response.body[0].chapterTitle).to.be.a('string');
+    });
+});
+
+describe("GET /comic/:comicId/:chapterNumber", function () {
+    it("Should retrieve all the pages of chapterNumber for comic with comicId.", async function () {
+        const comicId = await db.pool.query(
+            "SELECT comic_id FROM comic WHERE comic_title='Calvin and Hobbes'"
+        );
+        const id = await comicId.rows[0]["comic_id"] + "";
+
+        const response = await request(server.app)
+        .get('/comic/' + id + '/1');
+
+        for (let i = 0; i < response.body.length; i++) {
+            expect(response.body[i].pageImage).to.be.a('string');
+        }
+    });
+});
 
 describe("POST /removeChapter", function () {
     it("Should remove the chapter added in the previous test.", async function () {
