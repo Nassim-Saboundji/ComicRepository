@@ -37,7 +37,7 @@ class AdminDashboard extends React.Component {
             method: 'GET',
             credentials: 'include'
         })).json();
-        console.log(response);
+        this.setState({comics: response});
     }
 
 
@@ -60,12 +60,18 @@ class AdminDashboard extends React.Component {
             credentials: 'include',
             body: data
         })).json();
-        console.log(response);
+        
+        
+        if (response.message !== "Upload was successful.") {
+
+        } else {
+            this.getComics();
+        }
     }
 
 
     render() {
-        const comicList = this.state.comics.map((comic) => <p>{comic.comicTitle}</p>);
+        const comicList = this.state.comics.map((comic) => <p key={comic.comicId}>{comic.comicTitle}</p>);
         return (
             <Fragment>
                <div>
@@ -80,11 +86,12 @@ class AdminDashboard extends React.Component {
                     <div>
                        Title : <input type="text" value={this.state.title} onChange={(e) => {this.handleChange(e,"title")}}/>
                        <br/>
-                       Info : <input type="text"  onChange={(e) => {this.handleChange(e,"info")}} />
+                       Info : <textarea type="text"  onChange={(e) => {this.handleChange(e,"info")}} />
                        <br/>
                        Cover : <input type="file" onChange={this.handleFileChange}/>
                        <br/> 
                        <button onClick={this.addComic}>Add</button>
+                       <p></p>
                     </div>
                   </div> 
                </div>
