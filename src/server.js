@@ -1,7 +1,7 @@
 const db = require('./database/dummyDBCredentials');
 const express = require('express');
-const acm = require('./manager/addComicManager')
-const achm = require('./manager/addChapterManager');
+const acm = require('./managers/addComicManager');
+const achm = require('./managers/addChapterManager');
 const session = require('express-session');
 const secret = require('./secrets/secret');
 const { default: validator } = require('validator');
@@ -33,7 +33,7 @@ app.use(limiter);
 //For loading uploaded images we make the uploads folder accessible
 // through the static route
 // so we can get an image with ex: http://.../static/imageName.png
-app.use('/static', express.static('uploads'));
+app.use('/static', express.static('./uploads'));
 
 app.use(session({ 
     secret: secret.mySecret,

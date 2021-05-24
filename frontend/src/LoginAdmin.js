@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
 import validator from 'validator';
+import AdminDashboard from './AdminDashboard';
 
 class LoginAdmin extends React.Component {
     
@@ -55,7 +56,7 @@ class LoginAdmin extends React.Component {
         `,{
             method: 'GET',
             credentials: 'include'
-          })).json();
+        })).json();
 
         if (response.message === "Admin is logged in." || response.message === "Admin is already logged in.") {
             this.setState({logged: true});
@@ -71,7 +72,7 @@ class LoginAdmin extends React.Component {
             return(
                 <Fragment>
                     <h1>Dashboard</h1>
-                    <p>Add or remove comics or chapters</p>
+                    <AdminDashboard/>
                 </Fragment>
             );    
         }
