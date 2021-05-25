@@ -23,4 +23,13 @@ async function injectComicList() {
     }
 }
 
+function injectAdminFeatures() {
+    console.log(window.localStorage.getItem('logged'))
+    if (window.localStorage.getItem('logged') == "true") {
+        document.getElementById('admin').innerHTML = `<button id="addComic">Add a Comic</button>`;
+    }
+}
+
+
 injectComicList();
+injectAdminFeatures();
