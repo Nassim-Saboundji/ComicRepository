@@ -80,7 +80,7 @@ async function addChapterFilter(req, file, cb) {
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'uploads/');
+        cb(null, 'src/uploads/');
     },
     filename: function (req, file, cb) {
         let fileType = file.mimetype.split('/');

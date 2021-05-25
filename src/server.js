@@ -16,10 +16,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 //allow CORS
-app.use(cors({
-    credentials: true,
-    origin: "http://localhost:3001"
-}));
+// app.use(cors({
+//     credentials: true,
+//     origin: "http://localhost:3001"
+// }));
 
 //For preventing DDoS attacks
 const limiter = rateLimit({
@@ -33,7 +33,9 @@ app.use(limiter);
 //For loading uploaded images we make the uploads folder accessible
 // through the static route
 // so we can get an image with ex: http://.../static/imageName.png
-app.use('/static', express.static('./uploads'));
+app.use('/static', express.static('src/uploads'));
+
+app.use('/', express.static('src/frontend'));
 
 app.use(session({ 
     secret: secret.mySecret,
@@ -44,6 +46,7 @@ app.use(session({
     saveUninitialized: true,
     withCredentials: true 
 }));
+
 
 /*
 This route allows a user to authenticate oneself as an Admin which grants the ability
