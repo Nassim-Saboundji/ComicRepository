@@ -22,10 +22,7 @@ Now cd back to the root of the project (where package.json file is located) and 
 # How To Run Tests
 
 Considering that you are in the root of the project in your terminal install mocha globally `npm install -g mocha`.
-Now simply cd into the tests folder and do `mocha test.js` to run tests. You should have the following on your terminal :
-```
-
-```
+Now simply cd into the tests folder and do `mocha test.js` to run tests.
 
 # API Documentation
 
