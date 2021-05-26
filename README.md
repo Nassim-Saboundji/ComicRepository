@@ -1,23 +1,28 @@
 # comicRepo Backend REST API
 
-A web app for hosting an online comic repository it supports the ability of uploading comics and reading them.
-This is only the backend API.
+A backend REST API for a comic hosting website.
+
+Features :
+- Log in as an admin and also the ability to log out.
+- Upload comics [Admin only]
+- Upload chapters for those comics [Admin only]
+- Allow all visitors to read the comics that are added to the comicRepo
 
 # How To Run
 
 First you should cd into the repo and run the command `npm install` to install
-all the required dependencies. After this is done create an empty folder
-called uploads. This is where the uploaded comic posters and pages will be put.
+all the required dependencies. 
 
-Now you must have postgreSQL installed on your machine (A quick google search will teach you how, the installation is different depending on your OS). You can use the default postgres user like so `psql postgres` once this is done create a database named comicrepo with `create database comicrepo;`.
-Then connect yourself to that database with the command `\c comicrepo`. 
-Then do `\i databaseDefinitions.sql` to load the tables relevant to the web app.
-That's it! Exit postgres with the `exit` command.
+Now you must have postgreSQL installed on your machine (A quick google search will teach you how, the installation is different depending on your OS). 
+`cd` into the database folder inside the src folder. Once you're there do `sudo -u postgres psql` then create a database named comicrepo with `create database comicrepo;`. Now connect yourself to that database with the command `\c comicrepo`. Then use the command `\i databaseDefinitions.sql` to load the tables relevant to the web app. That's it! Exit postgres with the `exit` command.
 
-Now you can start using the REST API by launching the server by using the command
+Now cd back to the root of the project (where package.json file is located) and start using the REST API by launching the server with
 `npx nodemon`
 
-Here are the various routes that can be used: 
+# How To Run Tests
+
+
+# API Documentation
 
 __ [GET] http://localhost:3000/comics __
 
