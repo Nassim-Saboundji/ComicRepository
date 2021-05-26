@@ -16,10 +16,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 //allow CORS
-// app.use(cors({
-//     credentials: true,
-//     origin: "http://localhost:3001"
-// }));
+app.use(cors({
+    credentials: true,
+    origin: "http://localhost:3001" //specifiy the adress of your frontend
+}));
 
 //For preventing DDoS attacks
 const limiter = rateLimit({
@@ -35,7 +35,6 @@ app.use(limiter);
 // so we can get an image with ex: http://.../static/imageName.png
 app.use('/static', express.static('src/uploads'));
 
-app.use('/', express.static('src/frontend'));
 
 app.use(session({ 
     secret: secret.mySecret,
