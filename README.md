@@ -10,7 +10,7 @@ Features :
 
 # How To Run
 
-First you should cd into the repo and run the command `npm install` to install
+First you should `cd` into the repo and run the command `npm install` to install
 all the required dependencies. 
 
 Now you must have postgreSQL installed on your machine (A quick google search will teach you how, the installation is different depending on your OS). 
@@ -21,6 +21,11 @@ Now cd back to the root of the project (where package.json file is located) and 
 
 # How To Run Tests
 
+Considering that you are in the root of the project in your terminal install mocha globally `npm install -g mocha`.
+Now simply cd into the tests folder and do `mocha test.js` to run tests. You should have the following on your terminal :
+```
+
+```
 
 # API Documentation
 
