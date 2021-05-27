@@ -1,6 +1,6 @@
 # comicRepo Backend REST API
 
-A backend REST API for a comic hosting website.
+A backend REST API for a comic hosting website built in Node.js with the Express library and a PostgreSQL database.
 
 Features :
 - Log in as an admin and also the ability to log out.
