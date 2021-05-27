@@ -24,6 +24,47 @@ Now cd back to the root of the project (where package.json file is located) and 
 Considering that you are in the root of the project in your terminal install mocha globally `npm install -g mocha`.
 Now simply cd into the tests folder and do `mocha test.js` to run tests.
 
+You should get :
+
+```
+  GET /loginAdmin
+    ✓ Should login user as admin. (46ms)
+    ✓ Should notify admin that he's already logged in.
+
+  GET /logoutAdmin
+    ✓ Should logout the admin.
+
+  POST /addComic
+    ✓ Should add a comic to the comic repository.
+    ✓ Trying to add a second time the same comic should fail.
+
+  POST /addChapter
+    ✓ Should add a chapter to an existing comic.
+
+  GET /comics
+    ✓ Should retrieve the comicId, comicTitle and comicPoster
+     of all comics in the repository.
+
+  GET /comic/:comicId
+    ✓ Should retrieve comicTitle, comicPoster,
+    comicInfo for the comic associated with comicId.
+
+  GET /comic/:comicId/chapters
+    ✓ Should retrieve all chapters for a comic associated with comicId
+
+  GET /comic/:comicId/:chapterNumber
+    ✓ Should retrieve all the pages of chapterNumber for comic with comicId.
+
+  POST /removeChapter
+    ✓ Should remove the chapter added in the previous test.
+
+  POST /removeComic
+    ✓ Should remove the comic that was added in the previous test.
+
+
+  12 passing (139ms)
+```
+
 # API Documentation
 
 __ [GET] http://localhost:3000/comics __
