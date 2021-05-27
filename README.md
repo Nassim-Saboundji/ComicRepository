@@ -10,12 +10,14 @@ Features :
 
 # How To Run
 
+I assume that you're on a linux OS.
+
 First you should `cd` into the repo and run the command `npm install` to install
 all the required dependencies. 
 
 Create a new folder at the root of the project called `uploads`.
 
-Now you must have postgreSQL installed on your machine (A quick google search will teach you how, the installation is different depending on your OS). 
+Now you must have postgreSQL installed on your machine (A quick google search will teach you how). 
 `cd` into the database folder inside the src folder. Once you're there do `sudo -u postgres psql` then create a database named comicrepo with `create database comicrepo;`. Now connect yourself to that database with the command `\c comicrepo`. Then use the command `\i databaseDefinitions.sql` to load the tables relevant to the web app. That's it! Exit postgres with the `exit` command.
 
 Now cd back to the root of the project (where package.json file is located) and start using the REST API by launching the server with
@@ -75,29 +77,29 @@ will display all the comics that are currently uploaded to the comic repository.
 ```
 [
   {
-    "comic_id": 8,
-    "comic_title": "Calvin and Hobbes",
-    "comic_poster": "poster-1620750069541.jpeg"
+    "comicId": 8,
+    "comicTitle": "Calvin and Hobbes",
+    "comicPoster": "poster-1620750069541.jpeg"
   },
   {
-    "comic_id": 9,
-    "comic_title": "Dragon Ball",
-    "comic_poster": "poster-1620750143402.jpeg"
+    "comicId": 9,
+    "comicTitle": "Dragon Ball",
+    "comicPoster": "poster-1620750143402.jpeg"
   },
   {
-    "comic_id": 10,
-    "comic_title": "whatever",
-    "comic_poster": "poster-1620757319627.png"
+    "comicId": 10,
+    "comicTitle": "whatever",
+    "comicPoster": "poster-1620757319627.png"
   },
   {
-    "comic_id": 11,
-    "comic_title": "Star Wars",
-    "comic_poster": "poster-1620757524405.png"
+    "comicId": 11,
+    "comicTitle": "Star Wars",
+    "comicPoster": "poster-1620757524405.png"
   },
   {
-    "comic_id": 12,
-    "comic_title": "My Hero Academia",
-    "comic_poster": "poster-1620916175660.jpeg"
+    "comicId": 12,
+    "comicTitle": "My Hero Academia",
+    "comicPoster": "poster-1620916175660.jpeg"
   }
 ]
 
@@ -110,10 +112,10 @@ Example : http://localhost:3000/comic/8
 ```
 [
   {
-    "comic_id": 8,
-    "comic_title": "Calvin and Hobbes",
-    "comic_poster": "poster-1620750069541.jpeg",
-    "comic_info": "Calvin and Hobbes is a daily American comic strip created by cartoonist Bill Watterson that was syndicated from November 18, 1985 to December 31, 1995"
+    "comicId": 8,
+    "comicTitle": "Calvin and Hobbes",
+    "comicPoster": "poster-1620750069541.jpeg",
+    "comicInfo": "Calvin and Hobbes is a daily American comic strip created by cartoonist Bill Watterson that was syndicated from November 18, 1985 to December 31, 1995"
   }
 ]
 ```
@@ -125,19 +127,19 @@ Example : http://localhost:3000/comic/8/chapters
 ```
 [
   {
-    "chapter_number": 1,
-    "chapter_title": "Beginning",
-    "comic_id": 8
+    "chapterNumber": 1,
+    "chapterTitle": "Beginning",
+    "comicId": 8
   },
   {
-    "chapter_number": 2,
-    "chapter_title": "Middle",
-    "comic_id": 8
+    "chapterNumber": 2,
+    "chapterTitle": "Middle",
+    "comicId": 8
   },
   {
-    "chapter_number": 3,
-    "chapter_title": "End",
-    "comic_id": 8
+    "chapterNumber": 3,
+    "chapterTitle": "End",
+    "comicId": 8
   }
 ]
 ```
@@ -147,25 +149,25 @@ To get all the pages of a given chapter of a given comic. Example : http://local
 ```
 [
   {
-    "page_image": "pages-1620918186057.jpeg"
+    "pageImage": "pages-1620918186057.jpeg"
   },
   {
-    "page_image": "pages-1620918186061.jpeg"
+    "pageImage": "pages-1620918186061.jpeg"
   },
   {
-    "page_image": "pages-1620918186052.jpeg"
+    "pageImage": "pages-1620918186052.jpeg"
   },
   {
-    "page_image": "pages-1620918186063.jpeg"
+    "pageImage": "pages-1620918186063.jpeg"
   },
   {
-    "page_image": "pages-1620918186065.jpeg"
+    "pageImage": "pages-1620918186065.jpeg"
   },
   {
-    "page_image": "pages-1620918186071.png"
+    "pageImage": "pages-1620918186071.png"
   },
   {
-    "page_image": "pages-1620918186067.jpeg"
+    "pageImage": "pages-1620918186067.jpeg"
   }
 ]
 ```
@@ -214,8 +216,8 @@ of the newly added comic.
 
 ```
 {
-  "message": "Upload was successful.",
-  "comic_id": 2
+  "comicId": 2,
+  "message": "Upload was successful."
 }
 
 ```
