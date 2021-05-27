@@ -33,7 +33,7 @@ app.use(limiter);
 //For loading uploaded images we make the uploads folder accessible
 // through the static route
 // so we can get an image with ex: http://.../static/imageName.png
-app.use('/static', express.static('src/uploads'));
+app.use('/static', express.static('./uploads'));
 
 
 app.use(session({ 
