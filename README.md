@@ -13,6 +13,8 @@ Features :
 First you should `cd` into the repo and run the command `npm install` to install
 all the required dependencies. 
 
+Create a new folder at the root of the project called `uploads`.
+
 Now you must have postgreSQL installed on your machine (A quick google search will teach you how, the installation is different depending on your OS). 
 `cd` into the database folder inside the src folder. Once you're there do `sudo -u postgres psql` then create a database named comicrepo with `create database comicrepo;`. Now connect yourself to that database with the command `\c comicrepo`. Then use the command `\i databaseDefinitions.sql` to load the tables relevant to the web app. That's it! Exit postgres with the `exit` command.
 
