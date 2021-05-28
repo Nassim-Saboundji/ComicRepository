@@ -1,4 +1,4 @@
-# comicRepo Backend REST API
+# ComicRepo Backend REST API
 
 A backend REST API for a comic hosting website built in Node.js with the Express library and a PostgreSQL database. Tests were written with Mocha, Chai and supertest libraries.
 
